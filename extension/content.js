@@ -21,10 +21,13 @@ document.body.insertBefore(elemDiv, document.body.firstChild);
 //   }
 // });
 
+
+
 var Message = React.createClass({ // creates a new react component
   render: function() {
     return (
       <div className="message">
+        <span className="messageAuthor">{this.props.author}: </span>
         <span>{this.props.children}</span>
       </div>
     );
@@ -71,7 +74,7 @@ var ChatBox = React.createClass({
     this.loadMessagesFromServer();
     setInterval(this.loadMessagesFromServer, this.props.pollInterval);
   },
-  render: function() {
+  render: function() { // messageList print authors
     return (
       <div className="chatBox">
         <h1>Messages</h1>
@@ -82,7 +85,7 @@ var ChatBox = React.createClass({
   }
 });
 
-var MessageList = React.createClass({
+var MessageList = React.createClass({ // messageNodes print authors
   render: function() {
     var messageNodes = this.props.data.map(function(message) {
       return (
@@ -101,20 +104,19 @@ var MessageList = React.createClass({
 
 var MessageForm = React.createClass({
   getInitialState: function() {
-    return {author: '', text: ''};
+    return {text: ''};
   },
   handleTextChange: function(e) {
     this.setState({text: e.target.value});
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    var author = this.state.author.trim();
     var text = this.state.text.trim();
     if (!text) {
       return;
     }
-    this.props.onMessageSubmit({author: author, text: text});
-    this.setState({author: '', text: ''});
+    this.props.onMessageSubmit({text: text});
+    this.setState({text: ''});
   },
   render: function() {
     return (

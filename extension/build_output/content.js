@@ -30,6 +30,12 @@ var Message = React.createClass({
       { className: "message" },
       React.createElement(
         "span",
+        { className: "messageAuthor" },
+        this.props.author,
+        ": "
+      ),
+      React.createElement(
+        "span",
         null,
         this.props.children
       )
@@ -80,6 +86,7 @@ var ChatBox = React.createClass({
     setInterval(this.loadMessagesFromServer, this.props.pollInterval);
   },
   render: function () {
+    // messageList print authors
     return React.createElement(
       "div",
       { className: "chatBox" },
@@ -96,7 +103,7 @@ var ChatBox = React.createClass({
 
 var MessageList = React.createClass({
   displayName: "MessageList",
-
+  // messageNodes print authors
   render: function () {
     var messageNodes = this.props.data.map(function (message) {
       return React.createElement(
@@ -117,20 +124,19 @@ var MessageForm = React.createClass({
   displayName: "MessageForm",
 
   getInitialState: function () {
-    return { author: '', text: '' };
+    return { text: '' };
   },
   handleTextChange: function (e) {
     this.setState({ text: e.target.value });
   },
   handleSubmit: function (e) {
     e.preventDefault();
-    var author = this.state.author.trim();
     var text = this.state.text.trim();
     if (!text) {
       return;
     }
-    this.props.onMessageSubmit({ author: author, text: text });
-    this.setState({ author: '', text: '' });
+    this.props.onMessageSubmit({ text: text });
+    this.setState({ text: '' });
   },
   render: function () {
     return React.createElement(
