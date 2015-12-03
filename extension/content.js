@@ -21,7 +21,7 @@ var Chatension = React.createClass({
   render: function() {
     return (
       <div className="Chatension">
-        <h1 className="logo">Chatension</h1>
+        <h1 className="chatensionLogo">Chatension</h1>
         <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
         <ChatBox url={this.props.url} pollInterval={this.props.pollInterval} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
       </div>
@@ -42,7 +42,7 @@ var NamePage = React.createClass({ // creates a new react component
   },
   render: function() {
     return (
-      <div style={this.state.displayNamePage} className="nameBox">
+      <div style={this.state.displayNamePage} className="chatensionNameBox">
         <NameForm onNameSubmit={this.handleNameSubmit} />
       </div>
     );
@@ -67,15 +67,15 @@ var NameForm = React.createClass({
   },
   render: function() {
     return (
-      <form className="nameForm" onSubmit={this.handleSubmit}>
+      <form className="chatensionNameForm" onSubmit={this.handleSubmit}>
         <input
           type="text"
-          className="nameInput"
+          className="chatensionNameInput"
           placeholder="Your name"
           value={this.state.name}
           onChange={this.handleNameChange}
         />
-        <input className="nameSubmitBtn" type="submit" value="Enter room" />
+        <input className="chatensionNameSubmitBtn" type="submit" value="Enter room" />
       </form>
     );
   }
@@ -86,8 +86,8 @@ var NameForm = React.createClass({
 var Message = React.createClass({
   render: function() {
     return (
-      <div className="message">
-        <span className="messagename">{this.props.name}: </span>
+      <div className="chatensionMessage">
+        <span className="chatensionMessageName">{this.props.name}: </span>
         <span>{this.props.children}</span>
       </div>
     );
@@ -121,7 +121,6 @@ var ChatBox = React.createClass({
       data: message,
       success: function(data) {
         this.setState({data: data});
-        console.log(this.state.data)
       }.bind(this),
       error: function(xhr, status, err) {
         this.setState({data: message});
@@ -138,8 +137,7 @@ var ChatBox = React.createClass({
   },
   render: function() { // messageList print names
     return (
-      <div style={this.props.displayChatBox} className="chatBox">
-        <h1>Messages</h1>
+      <div style={this.props.displayChatBox} className="chatensionChatBox">
         <MessageList data={this.state.data} />
         <MessageForm onMessageSubmit={this.handleMessageSubmit} />
       </div>
@@ -157,7 +155,7 @@ var MessageList = React.createClass({ // messageNodes print names
       );
     });
     return (
-      <div className="messageList">
+      <div className="chatensionMessageList">
         {messageNodes}
       </div>
     );
@@ -182,16 +180,18 @@ var MessageForm = React.createClass({
   },
   render: function() {
     return (
-      <form className="messageForm" onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          className="messageInput"
-          placeholder="Say something..."
-          value={this.state.text}
-          onChange={this.handleTextChange}
-        />
-        <input type="submit" value="Post" />
-      </form>
+      <div className="chatensionMessageFormDiv">
+        <form className="chatensionMessageForm" onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            className="chatensionMessageInput"
+            placeholder="Say something..."
+            value={this.state.text}
+            onChange={this.handleTextChange}
+          />
+          <input type="submit" className="chatensionMessageSubmitBtn" value="+" />
+        </form>
+      </div>
     );
   }
 });

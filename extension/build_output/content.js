@@ -26,7 +26,7 @@ var Chatension = React.createClass({
       { className: "Chatension" },
       React.createElement(
         "h1",
-        { className: "logo" },
+        { className: "chatensionLogo" },
         "Chatension"
       ),
       React.createElement(NamePage, { url: this.props.url, showChatBoxHandler: this.showChatBoxHandler, nameHandler: this.nameHandler }),
@@ -51,7 +51,7 @@ var NamePage = React.createClass({
   render: function () {
     return React.createElement(
       "div",
-      { style: this.state.displayNamePage, className: "nameBox" },
+      { style: this.state.displayNamePage, className: "chatensionNameBox" },
       React.createElement(NameForm, { onNameSubmit: this.handleNameSubmit })
     );
   }
@@ -78,15 +78,15 @@ var NameForm = React.createClass({
   render: function () {
     return React.createElement(
       "form",
-      { className: "nameForm", onSubmit: this.handleSubmit },
+      { className: "chatensionNameForm", onSubmit: this.handleSubmit },
       React.createElement("input", {
         type: "text",
-        className: "nameInput",
+        className: "chatensionNameInput",
         placeholder: "Your name",
         value: this.state.name,
         onChange: this.handleNameChange
       }),
-      React.createElement("input", { className: "nameSubmitBtn", type: "submit", value: "Enter room" })
+      React.createElement("input", { className: "chatensionNameSubmitBtn", type: "submit", value: "Enter room" })
     );
   }
 });
@@ -99,10 +99,10 @@ var Message = React.createClass({
   render: function () {
     return React.createElement(
       "div",
-      { className: "message" },
+      { className: "chatensionMessage" },
       React.createElement(
         "span",
-        { className: "messagename" },
+        { className: "chatensionMessageName" },
         this.props.name,
         ": "
       ),
@@ -144,7 +144,6 @@ var ChatBox = React.createClass({
       data: message,
       success: (function (data) {
         this.setState({ data: data });
-        console.log(this.state.data);
       }).bind(this),
       error: (function (xhr, status, err) {
         this.setState({ data: message });
@@ -163,12 +162,7 @@ var ChatBox = React.createClass({
     // messageList print names
     return React.createElement(
       "div",
-      { style: this.props.displayChatBox, className: "chatBox" },
-      React.createElement(
-        "h1",
-        null,
-        "Messages"
-      ),
+      { style: this.props.displayChatBox, className: "chatensionChatBox" },
       React.createElement(MessageList, { data: this.state.data }),
       React.createElement(MessageForm, { onMessageSubmit: this.handleMessageSubmit })
     );
@@ -188,7 +182,7 @@ var MessageList = React.createClass({
     });
     return React.createElement(
       "div",
-      { className: "messageList" },
+      { className: "chatensionMessageList" },
       messageNodes
     );
   }
@@ -214,16 +208,20 @@ var MessageForm = React.createClass({
   },
   render: function () {
     return React.createElement(
-      "form",
-      { className: "messageForm", onSubmit: this.handleSubmit },
-      React.createElement("input", {
-        type: "text",
-        className: "messageInput",
-        placeholder: "Say something...",
-        value: this.state.text,
-        onChange: this.handleTextChange
-      }),
-      React.createElement("input", { type: "submit", value: "Post" })
+      "div",
+      { className: "chatensionMessageFormDiv" },
+      React.createElement(
+        "form",
+        { className: "chatensionMessageForm", onSubmit: this.handleSubmit },
+        React.createElement("input", {
+          type: "text",
+          className: "chatensionMessageInput",
+          placeholder: "Say something...",
+          value: this.state.text,
+          onChange: this.handleTextChange
+        }),
+        React.createElement("input", { type: "submit", className: "chatensionMessageSubmitBtn", value: "+" })
+      )
     );
   }
 });
