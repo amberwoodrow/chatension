@@ -6,8 +6,50 @@
   left: 0px;
   bottom: 0px;
   z-index: 9999;
-  background: beige;
-  border: 2px solid;
-  padding: 20px;
   overflow: auto;
+  background: #26203B;
+  font-family: Helvetica;
+  border: solid 2px #443E59;*/
+}
+
+.nameInput {
+  color: #FFFFFF;
+  font-size: 30px;
+  width: 220px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 15px;
+  border: solid 2px #5D5D1E;
+  border-radius: 5px;
+  background: #332F3C;*/
+}
+
+.nameSubmitBtn {
+  color: #FFA13C;
+  font-size: 20px;
+  width: 144px;
+  padding: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: solid 2px #5D5D1E;
+  border-radius: 5px;
+  margin: auto;
+  background: #443E59;
+}
+
+.nameSubmitBtn:focus {
+  outline: none;
+}
+
+.nameForm {
+  text-align: center;
+  margin: auto;
+}
+
+.logo{
+  color: blanchedalmond;
+  text-align: center;
+  border-bottom: solid 2px #FFA13C;
+  background: #FFB05B;
 }

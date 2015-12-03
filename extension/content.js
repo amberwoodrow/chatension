@@ -6,28 +6,88 @@ var elemDiv = document.createElement('div');
 elemDiv.id = 'chatension-sidebar';
 document.body.insertBefore(elemDiv, document.body.firstChild);
 
-// var NamePage = React.createClass({ // creates a new react component
-//   render: function() {
-//     return (
-//       <form className="nameForm" onSubmit={this.handleSubmit}>
-//         <input
-//           type="text"
-//           placeholder="Your name"
-//           value={this.state.author}
-//         />
-//         <input type="submit" value="Post" />
-//       </form>
-//     );
-//   }
-// });
+// puts together the chatbox and name page
 
+var Chatension = React.createClass({
+  nameHandler: function(name) {
+    this.setState({name: name});
+  },
+  showChatBoxHandler: function() {
+    this.setState({displayChatBox: {display: 'block'}});
+  },
+  getInitialState: function() {
+    return {displayChatBox: {display: 'none'}, name: ''};
+  },
+  render: function() {
+    return (
+      <div className="Chatension">
+        <h1 className="logo">Chatension</h1>
+        <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
+        <ChatBox url={this.props.url} pollInterval={this.props.pollInterval} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
+      </div>
+    );
+  }
+});
 
+// Username page
 
-var Message = React.createClass({ // creates a new react component
+var NamePage = React.createClass({ // creates a new react component
+  handleNameSubmit: function(name) {
+    this.props.nameHandler(name.name)
+    this.props.showChatBoxHandler()
+    this.setState({displayNamePage: {display: 'none'}});
+  },
+  getInitialState: function() {
+    return {displayNamePage: {display: 'block'}};
+  },
+  render: function() {
+    return (
+      <div style={this.state.displayNamePage} className="nameBox">
+        <NameForm onNameSubmit={this.handleNameSubmit} />
+      </div>
+    );
+  }
+});
+
+var NameForm = React.createClass({
+  getInitialState: function() {
+    return {name: ''};
+  },
+  handleNameChange: function(e) {
+    this.setState({name: e.target.value});
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var name = this.state.name.trim();
+    if (!name && name.trim() === "") {
+      return;
+    }
+    this.props.onNameSubmit({name: name});
+    this.setState({name: ''});
+  },
+  render: function() {
+    return (
+      <form className="nameForm" onSubmit={this.handleSubmit}>
+        <input
+          type="text"
+          className="nameInput"
+          placeholder="Your name"
+          value={this.state.name}
+          onChange={this.handleNameChange}
+        />
+        <input className="nameSubmitBtn" type="submit" value="Enter room" />
+      </form>
+    );
+  }
+});
+
+// Chat box page
+
+var Message = React.createClass({
   render: function() {
     return (
       <div className="message">
-        <span className="messageAuthor">{this.props.author}: </span>
+        <span className="messagename">{this.props.name}: </span>
         <span>{this.props.children}</span>
       </div>
     );
@@ -51,6 +111,7 @@ var ChatBox = React.createClass({
   handleMessageSubmit: function(message) {
     var messages = this.state.data;
     message.id = Date.now();
+    message.name = this.props.name;
     var newMessages = messages.concat([message]);
     this.setState({data: newMessages});
     $.ajax({
@@ -60,6 +121,7 @@ var ChatBox = React.createClass({
       data: message,
       success: function(data) {
         this.setState({data: data});
+        console.log(this.state.data)
       }.bind(this),
       error: function(xhr, status, err) {
         this.setState({data: message});
@@ -74,9 +136,9 @@ var ChatBox = React.createClass({
     this.loadMessagesFromServer();
     setInterval(this.loadMessagesFromServer, this.props.pollInterval);
   },
-  render: function() { // messageList print authors
+  render: function() { // messageList print names
     return (
-      <div className="chatBox">
+      <div style={this.props.displayChatBox} className="chatBox">
         <h1>Messages</h1>
         <MessageList data={this.state.data} />
         <MessageForm onMessageSubmit={this.handleMessageSubmit} />
@@ -85,11 +147,11 @@ var ChatBox = React.createClass({
   }
 });
 
-var MessageList = React.createClass({ // messageNodes print authors
+var MessageList = React.createClass({ // messageNodes print names
   render: function() {
     var messageNodes = this.props.data.map(function(message) {
       return (
-        <Message author={message.author} key={message.id}>
+        <Message name={message.name} key={message.id}>
           {message.text}
         </Message>
       );
@@ -123,6 +185,7 @@ var MessageForm = React.createClass({
       <form className="messageForm" onSubmit={this.handleSubmit}>
         <input
           type="text"
+          className="messageInput"
           placeholder="Say something..."
           value={this.state.text}
           onChange={this.handleTextChange}
@@ -134,6 +197,6 @@ var MessageForm = React.createClass({
 });
 
 React.render(
-  <ChatBox url="http://localhost:3000/api/messages" pollInterval={2000} />,
+  <Chatension url="http://localhost:3000/api/messages" pollInterval={2000} />,
   document.getElementById('chatension-sidebar')
 );
