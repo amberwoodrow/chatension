@@ -7,9 +7,9 @@ chrome.browserAction.onClicked.addListener(function() {
     if (res[0]) { return; } // value of `injected` above: don't inject twice
 
     chrome.tabs.insertCSS({ file: 'main.css' });
-    chrome.tabs.executeScript({ file: 'react.js' });
-    chrome.tabs.executeScript({ file: 'react-dom.min.js' });
-    chrome.tabs.executeScript({ file: 'jquery.min.js' });
+    chrome.tabs.executeScript({ file: 'libraries/react.js' });
+    chrome.tabs.executeScript({ file: 'libraries/react-dom.min.js' });
+    chrome.tabs.executeScript({ file: 'libraries/jquery.min.js' });
     chrome.tabs.executeScript({ file: 'build_output/content.js' });
   });
 });

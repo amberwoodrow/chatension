@@ -19,8 +19,8 @@ var io = require('socket.io')(server);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // changed to true for new api
 
-var routes = require('./routes/index');
-app.use('/', routes);
+// var routes = require('./routes/index');
+// app.use('/', routes);
 
 var room = require('./routes/room.js');
 var message = require('./routes/message.js');
