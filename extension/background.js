@@ -1,6 +1,6 @@
 chrome.browserAction.onClicked.addListener(function() {
   chrome.tabs.executeScript({
-    code  : 'var injected = window.octotreeInjected; window.octotreeInjected = true; injected;',
+    code  : 'var injected = window.chatensionInjected; window.chatensionInjected = true; injected;',
     runAt : 'document_start'
   }, function(res) {
 

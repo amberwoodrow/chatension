@@ -1,3 +1,4 @@
+// lines 2 to 9 should probably be a componenet
 var theirBody = document.getElementsByTagName("body")[0].innerHTML;
 var theirNewBody = "<div id='theirBody'>" + theirBody + "</div>";
 document.getElementsByTagName("body")[0].innerHTML = theirNewBody;
@@ -61,7 +62,6 @@ var NameForm = React.createClass({
     var name = this.state.name.trim();
     if (!name && name.trim() === "") {
       return;
-    }
     this.props.onNameSubmit({name: name});
     this.setState({name: ''});
   },
@@ -95,11 +95,13 @@ var Message = React.createClass({
 });
 
 var ChatBox = React.createClass({
+  // GET to create room or retrieve messages for room
   loadMessagesFromServer: function() {
     $.ajax({ 
-      url: this.props.url, // this function's url? set at bottom as /api/comments
+      url: this.props.url, // set at bottom
       dataType: 'json',
       cache: false, // no cache because data changes
+      data: document.URL;
       success: function(data) {
         this.setState({data: data});
       }.bind(this),
@@ -110,10 +112,17 @@ var ChatBox = React.createClass({
   },
   handleMessageSubmit: function(message) {
     var messages = this.state.data;
+    var url = document.URL;
+
+    // add to message object for post request
     message.id = Date.now();
     message.name = this.props.name;
+    message.url = url;
+
     var newMessages = messages.concat([message]);
     this.setState({data: newMessages});
+
+    // POST message to server
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -197,6 +206,6 @@ var MessageForm = React.createClass({
 });
 
 React.render(
-  <Chatension url="http://localhost:3000/api/messages" pollInterval={2000} />,
+  <Chatension url="http://localhost:3000/api/chatension" pollInterval={2000} />,
   document.getElementById('chatension-sidebar')
 );

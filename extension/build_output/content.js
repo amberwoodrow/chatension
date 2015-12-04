@@ -1,5 +1,4 @@
-// make this a gulp task
-
+// lines 2 to 9 should probably be a componenet
 var theirBody = document.getElementsByTagName("body")[0].innerHTML;
 var theirNewBody = "<div id='theirBody'>" + theirBody + "</div>";
 document.getElementsByTagName("body")[0].innerHTML = theirNewBody;
@@ -7,6 +6,10 @@ document.getElementsByTagName("body")[0].innerHTML = theirNewBody;
 var elemDiv = document.createElement('div');
 elemDiv.id = 'chatension-sidebar';
 document.body.insertBefore(elemDiv, document.body.firstChild);
+
+// set url var
+var url = document.URL;
+console.log(url);
 
 // puts together the chatbox and name page
 
@@ -122,7 +125,7 @@ var ChatBox = React.createClass({
 
   loadMessagesFromServer: function () {
     $.ajax({
-      url: this.props.url, // this function's url? set at bottom as /api/comments
+      url: this.props.url, // set at bottom
       dataType: 'json',
       cache: false, // no cache because data changes
       success: (function (data) {
@@ -135,10 +138,16 @@ var ChatBox = React.createClass({
   },
   handleMessageSubmit: function (message) {
     var messages = this.state.data;
+    var url = document.URL;
+
+    // add to message object for post request
     message.id = Date.now();
     message.name = this.props.name;
+    message.url = url;
+
     var newMessages = messages.concat([message]);
     this.setState({ data: newMessages });
+
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -228,4 +237,4 @@ var MessageForm = React.createClass({
   }
 });
 
-React.render(React.createElement(Chatension, { url: "http://localhost:3000/api/messages", pollInterval: 2000 }), document.getElementById('chatension-sidebar'));
+React.render(React.createElement(Chatension, { url: "http://localhost:3000/api/chatension", pollInterval: 2000 }), document.getElementById('chatension-sidebar'));
