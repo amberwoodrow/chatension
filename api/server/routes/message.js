@@ -5,15 +5,25 @@ var Message = require('../models/message.js');
 
 // GET room, if room doesn't exist it creates one
 router.get('/api/chatension', function(req, res, next) {
+
   Room.findOne({"url": req.body.url}, function(err, data){
     if(err){
       res.json({'message': err});
     } else {
       if (data === null) {
         // createroom
-        // handle 401 message on extension by tell user they are the first one to come to the room.
-        // res.status(401).json({"message": "Room not found"});
-        res.json({"message": "no url"})
+        newRoom = new Room({
+          _url: req.query.currentUrl,
+        });
+        newRoom.save(function(err, data){
+          if(err){
+            res.status(401).json({"Error": err+", Could not create new room"});
+          } else {
+            // better handle success in extension, tell user they created a room
+            console.log("Success: New room created");
+            res.json(data);
+          }
+        });
       } else {
         res.json(data);
       }

@@ -1,45 +1,24 @@
-/**
- * Module Dependencies
- */
+// MODULE DEPENDENCIES
 
 var gulp = require('gulp');
+var babel = require('gulp-babel');
 var jshint = require('gulp-jshint');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var nodemon = require('gulp-nodemon');
+var io = require('socket.io');
 
-// (function(console) { setup api and mongo see how old the extension reload is for gulp-watch
-//     'use strict';
-
-//     var gulp = require('gulp');;
-//     var watch = require('gulp-watch');
-//     var io = require('socket.io');
-
-//     gulp.task('chrome-watch', function () {
-//         var WEB_SOCKET_PORT = 8890;
-
-//         io = io.listen(WEB_SOCKET_PORT);
-
-//         watch('**/*.*', function(file) {
-//             console.log('change detected', file.relative);
-//             io.emit('file.change', {});
-//         });
-//     });
-
-// })(global.console);
-/**
- * Config
- */
+// CONFIG
 
 var paths = {
-  styles: [
-    './client/css/*.css',
-  ],
-  scripts: [
-    './client/js/*.js',
+  sass: [
+    '../extension/main.css'
   ],
   server: [
     './server/bin/www'
+  ],
+  content: [
+    '../extension/content.js'
   ]
 };
 
@@ -49,23 +28,36 @@ var nodemonConfig = {
   ignore: ['node_modules']
 };
 
+// GULP TASKS
 
-/**
- * Gulp Tasks
- */
+gulp.task('babel-build', function() {
+  // build command line: 
+  // babel --presets react ../extension/content.js --watch --out-dir ./build_output
+  console.log('Babel built');
+  return gulp.src('../extension/content.js')
+    .pipe(babel({
+      presets: ['react']
+    }))
+    .pipe(gulp.dest('../extension/build_output'));
+});
+
+gulp.task('chrome-watch', function () {
+  var WEB_SOCKET_PORT = 8890;
+  io = io.listen(WEB_SOCKET_PORT);
+  watch('**/*.*', function(file) {
+    console.log('chrome-watch change detected in: ', file.relative);
+    io.emit('file.change', {});
+  });
+});
+
+gulp.task('sass-build', function () {
+
+});
 
 gulp.task('lint', function() {
   return gulp.src(paths.scripts)
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
-});
-
-gulp.task('browser-sync', ['nodemon'], function(done) {
-  browserSync({
-    proxy: "localhost:3000",  // local node app address
-    port: 5000,  // use *different* port than above
-    notify: true
-  }, done);
 });
 
 gulp.task('nodemon', function (cb) {
@@ -86,6 +78,7 @@ gulp.task('nodemon', function (cb) {
 
 gulp.task('watch', function() {
   gulp.watch(paths.scripts, ['lint']);
+  gulp.watch(paths.content, ['babel-build']);
 });
 
-gulp.task('default', ['browser-sync', 'watch'], function(){});
+gulp.task('default', ['nodemon', 'watch', 'chrome-watch'], function(){});

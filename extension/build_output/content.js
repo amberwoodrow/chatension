@@ -7,9 +7,7 @@ var elemDiv = document.createElement('div');
 elemDiv.id = 'chatension-sidebar';
 document.body.insertBefore(elemDiv, document.body.firstChild);
 
-// set url var
-var url = document.URL;
-console.log(url);
+var currentUrl = document.URL;
 
 // puts together the chatbox and name page
 
@@ -123,11 +121,13 @@ var Message = React.createClass({
 var ChatBox = React.createClass({
   displayName: "ChatBox",
 
+  // GET to create room or retrieve messages for room
   loadMessagesFromServer: function () {
     $.ajax({
       url: this.props.url, // set at bottom
       dataType: 'json',
       cache: false, // no cache because data changes
+      data: { currentUrl: currentUrl },
       success: (function (data) {
         this.setState({ data: data });
       }).bind(this),
@@ -138,22 +138,23 @@ var ChatBox = React.createClass({
   },
   handleMessageSubmit: function (message) {
     var messages = this.state.data;
-    var url = document.URL;
 
     // add to message object for post request
     message.id = Date.now();
     message.name = this.props.name;
-    message.url = url;
+    message.url = currentUrl;
 
     var newMessages = messages.concat([message]);
     this.setState({ data: newMessages });
 
+    // POST message to server
     $.ajax({
       url: this.props.url,
       dataType: 'json',
       type: 'POST',
       data: message,
       success: (function (data) {
+        // console.log(data)
         this.setState({ data: data });
       }).bind(this),
       error: (function (xhr, status, err) {

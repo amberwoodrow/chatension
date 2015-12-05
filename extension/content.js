@@ -7,6 +7,8 @@ var elemDiv = document.createElement('div');
 elemDiv.id = 'chatension-sidebar';
 document.body.insertBefore(elemDiv, document.body.firstChild);
 
+var currentUrl = document.URL;
+
 // puts together the chatbox and name page
 
 var Chatension = React.createClass({
@@ -62,6 +64,7 @@ var NameForm = React.createClass({
     var name = this.state.name.trim();
     if (!name && name.trim() === "") {
       return;
+    }
     this.props.onNameSubmit({name: name});
     this.setState({name: ''});
   },
@@ -101,7 +104,7 @@ var ChatBox = React.createClass({
       url: this.props.url, // set at bottom
       dataType: 'json',
       cache: false, // no cache because data changes
-      data: document.URL;
+      data: {currentUrl: currentUrl},
       success: function(data) {
         this.setState({data: data});
       }.bind(this),
@@ -112,12 +115,11 @@ var ChatBox = React.createClass({
   },
   handleMessageSubmit: function(message) {
     var messages = this.state.data;
-    var url = document.URL;
 
     // add to message object for post request
     message.id = Date.now();
     message.name = this.props.name;
-    message.url = url;
+    message.url = currentUrl;
 
     var newMessages = messages.concat([message]);
     this.setState({data: newMessages});
@@ -129,6 +131,7 @@ var ChatBox = React.createClass({
       type: 'POST',
       data: message,
       success: function(data) {
+        // console.log(data)
         this.setState({data: data});
       }.bind(this),
       error: function(xhr, status, err) {
