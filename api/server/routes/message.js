@@ -29,18 +29,35 @@ router.get('/api/chatension', function(req, res, next) {
       }
     }
   });
-
-
-  // db.collection.find({ "fieldToCheck" : { $exists : true, $ne : null } })
-
-  // when username is created find room by it's unique url
-  // if room doesn't exsist create one and tell the user they are they are the first in the room
   // serve room with messages
+  // when username is created find room by it's unique url
 });
 
 // Post to messages
 router.post('/api/chatension', function(req, res, next) {
-  // when message is posted add messages to room by sending url, name, message, timestamp
+  newMessage = new Message({
+    _room: req.body.url,
+    messageContent: req.body.text,
+    name: req.body.name,
+    timeStamp: req.body.id
+  });
+  newMessage.save(function(err,data){
+    if(err){
+      res.json({'message':err});
+    } else{
+      console.log(data);
+      res.json(data);
+    }
+  });
 });
+
+// Story
+// .findOne({ title: 'Once upon a timex.' })
+// .populate('_creator')
+// .exec(function (err, story) {
+//   if (err) return handleError(err);
+//   console.log('The creator is %s', story._creator.name);
+//   // prints "The creator is Aaron"
+// });
 
 module.exports = router;

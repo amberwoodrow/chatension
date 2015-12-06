@@ -28,12 +28,16 @@ var Chatension = React.createClass({
       "div",
       { className: "Chatension" },
       React.createElement(
-        "h1",
-        { className: "chatensionLogo" },
-        "Chatension"
-      ),
-      React.createElement(NamePage, { url: this.props.url, showChatBoxHandler: this.showChatBoxHandler, nameHandler: this.nameHandler }),
-      React.createElement(ChatBox, { url: this.props.url, pollInterval: this.props.pollInterval, displayChatBox: this.state.displayChatBox, name: this.state.name })
+        "div",
+        { className: "bg" },
+        React.createElement(
+          "h1",
+          { className: "chatensionLogo" },
+          "Chatension"
+        ),
+        React.createElement(NamePage, { url: this.props.url, showChatBoxHandler: this.showChatBoxHandler, nameHandler: this.nameHandler }),
+        React.createElement(ChatBox, { url: this.props.url, pollInterval: this.props.pollInterval, displayChatBox: this.state.displayChatBox, name: this.state.name })
+      )
     );
   }
 });
@@ -137,7 +141,7 @@ var ChatBox = React.createClass({
     });
   },
   handleMessageSubmit: function (message) {
-    var messages = this.state.data;
+    var messages = this.state.data.messages;
 
     // add to message object for post request
     message.id = Date.now();
@@ -154,7 +158,6 @@ var ChatBox = React.createClass({
       type: 'POST',
       data: message,
       success: (function (data) {
-        // console.log(data)
         this.setState({ data: data });
       }).bind(this),
       error: (function (xhr, status, err) {
@@ -185,13 +188,21 @@ var MessageList = React.createClass({
   displayName: "MessageList",
   // messageNodes print names
   render: function () {
-    var messageNodes = this.props.data.map(function (message) {
-      return React.createElement(
-        Message,
-        { name: message.name, key: message.id },
-        message.text
-      );
-    });
+    if (this.props.data.length === 0) {
+      // tell user they are the first in this room
+      console.log("1");
+    } else if (this.props.data.messages) {
+      console.log("2");
+    } else {
+      console.log(this.props.data);
+      var messageNodes = this.props.data.map(function (message) {
+        return React.createElement(
+          Message,
+          { name: message.name, key: message.id },
+          message.messageContent
+        );
+      });
+    }
     return React.createElement(
       "div",
       { className: "chatensionMessageList" },

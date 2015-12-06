@@ -24,9 +24,11 @@ var Chatension = React.createClass({
   render: function() {
     return (
       <div className="Chatension">
-        <h1 className="chatensionLogo">Chatension</h1>
-        <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
-        <ChatBox url={this.props.url} pollInterval={this.props.pollInterval} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
+        <div className="bg">
+          <h1 className="chatensionLogo">Chatension</h1>
+          <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
+          <ChatBox url={this.props.url} pollInterval={this.props.pollInterval} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
+        </div>
       </div>
     );
   }
@@ -114,7 +116,7 @@ var ChatBox = React.createClass({
     });
   },
   handleMessageSubmit: function(message) {
-    var messages = this.state.data;
+    var messages = this.state.data.messages;
 
     // add to message object for post request
     message.id = Date.now();
@@ -131,7 +133,6 @@ var ChatBox = React.createClass({
       type: 'POST',
       data: message,
       success: function(data) {
-        // console.log(data)
         this.setState({data: data});
       }.bind(this),
       error: function(xhr, status, err) {
@@ -159,13 +160,21 @@ var ChatBox = React.createClass({
 
 var MessageList = React.createClass({ // messageNodes print names
   render: function() {
-    var messageNodes = this.props.data.map(function(message) {
-      return (
-        <Message name={message.name} key={message.id}>
-          {message.text}
-        </Message>
-      );
-    });
+    if (this.props.data.length === 0) {
+      // tell user they are the first in this room
+      console.log("1")
+    } else if (this.props.data.messages) {
+      console.log("2")
+    } else {
+      console.log(this.props.data)
+      var messageNodes = this.props.data.map(function(message) {
+        return (
+          <Message name={message.name} key={message.id}>
+            {message.messageContent}
+          </Message>
+        );
+      });
+    }
     return (
       <div className="chatensionMessageList">
         {messageNodes}
