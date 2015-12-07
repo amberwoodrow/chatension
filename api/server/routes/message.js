@@ -1,7 +1,26 @@
+var dotenv = require('dotenv');
+dotenv.load();
+
 var express = require('express');
 var router = express.Router();
 var Room = require('../models/room.js');
 var Message = require('../models/message.js');
+var Pusher = require('pusher');
+var pusher = new Pusher({
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET_SAUCE,
+  encrypted: true
+});
+
+// Config
+pusher.port = 443;
+
+// pusher.trigger('test_channel', 'my_event', {
+//   "message": "hello world"
+// });
+
+
 
 // GET room, if room doesn't exist it creates one
 router.get('/api/room', function(req, res, next) {
@@ -32,15 +51,18 @@ router.get('/api/room', function(req, res, next) {
       }
     }
   });
-  // serve room with messages
-  // when username is created find room by it's unique url
 });
-
-// aaron.stories.push(story1);
-// aaron.save(callback);
 
 // Post to messages
 router.post('/api/message', function(req, res, next) {
+
+  pusher.trigger(req.body.url, 'messageRecieved', {
+    messageContent: req.body.text,
+    name: req.body.name,
+    timeStamp: req.body.timeStamp
+  });
+
+  console.log(req.body)
 
   Room.findOne({"url": req.body.url})
   .exec(function(err, room) {
@@ -48,7 +70,7 @@ router.post('/api/message', function(req, res, next) {
       _room: room._id,
       messageContent: req.body.text,
       name: req.body.name,
-      timeStamp: req.body.id
+      timeStamp: req.body.timeStamp
     });
 
     room._messages.push(newMessage);
@@ -61,9 +83,6 @@ router.post('/api/message', function(req, res, next) {
       });
     });
   });
-
-
-
 });
 
 module.exports = router;

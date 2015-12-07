@@ -12,23 +12,10 @@ var cookieParser = require('cookie-parser');
 
 mongoose.connect(process.env.MONGO_URI);
 
-var routes = require('./routes/index');
-var server = require('http').Server(app); 
-var io = require('socket.io')(server);
-
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // changed to true for new api
+app.use(bodyParser.urlencoded({ extended: true })); // changed to true because of example
 
 var message = require('./routes/message.js');
-
 app.use('/', message);
-
-// io.on('connect', function(socket){
-//   socket.on('userAndMessage', function (data) {
-//     console.log(data);
-//     io.emit('data', data);
-//     // io.emit('data', JSON.stringify(data));
-//   });
-// });
 
 module.exports = app;

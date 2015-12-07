@@ -8,7 +8,23 @@ elemDiv.id = 'chatension-sidebar';
 // elemDiv.style["left"] = "10px";
 document.body.insertBefore(elemDiv, document.body.firstChild);
 
-var currentUrl = document.URL;
+var formatCurrentUrl = function() {
+  return document.URL.replace(/http:\/\//, "").replace(/[^\w\s]/gi, "_");
+};
+
+var currentUrl = formatCurrentUrl();
+
+Pusher.log = function(message) {
+  if (window.console && window.console.log) {
+    window.console.log(message);
+  }
+};
+
+var pusher = new Pusher('d3ff643b6b3d608b70fb', {
+  encrypted: true
+});
+
+var channel = pusher.subscribe(currentUrl);
 
 // puts together the chatbox and name page
 
@@ -39,7 +55,7 @@ var Chatension = React.createClass({
         <div className="bg">
           <h1 className="chatensionLogo">Chatension</h1>
           <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
-          <ChatBox url={this.props.url} pollInterval={this.props.pollInterval} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
+          <ChatBox url={this.props.url} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
         </div>
         <div className="chatensionArrowBox" onClick={this.arrowClickHandler}>
           <div className={this.state.chatensionArrowClass}></div>
@@ -146,14 +162,11 @@ var ChatBox = React.createClass({
     });
   },
   handleMessageSubmit: function(message) {
-    var messages = this.state.data._messages;
 
     // add to message object for post request
     message.timeStamp = Date.now();
     message.name = this.props.name;
     message.url = currentUrl;
-
-    var newMessages = messages.concat([message]);
 
     // POST message to server
     $.ajax({
@@ -175,7 +188,25 @@ var ChatBox = React.createClass({
   },
   componentDidMount: function() {
     this.loadMessagesFromServer();
-    setInterval(this.loadMessagesFromServer, this.props.pollInterval);
+    channel.bind('messageRecieved', function(data) {
+      var message = {}
+      message.timeStamp = data.timeStamp;
+      message.name = data.name;
+      message.url = currentUrl;
+      message.messageContent = data.messageContent;
+
+      var newMessages = this.state.data._messages.concat([message])
+
+      this.setState({data: {_messages: newMessages}});
+
+      // scroll to the bottom
+      var chatensionSelector = document.getElementsByClassName("chatension")[0]
+      var height = chatensionSelector.scrollHeight
+      chatensionSelector.scrollTop = height;
+
+      // console.log(document.getElementsByClassName("chatensionMessageList"))
+
+    }.bind(this));
   },
   render: function() { // messageList print names
     return (
@@ -222,6 +253,7 @@ var MessageForm = React.createClass({
     if (!text) {
       return;
     }
+    console.log(text)
     this.props.onMessageSubmit({text: text});
     this.setState({text: ''});
   },
@@ -244,6 +276,6 @@ var MessageForm = React.createClass({
 });
 
 React.render(
-  <Chatension url="http://localhost:3000/api" pollInterval={2000} />,
+  <Chatension url="http://localhost:3000/api" />,
   document.getElementById('chatension-sidebar')
 );

@@ -9,7 +9,8 @@ chrome.browserAction.onClicked.addListener(function() {
     chrome.tabs.insertCSS({ file: 'build_output/main.css' });
     chrome.tabs.executeScript({ file: 'libraries/react.js' });
     chrome.tabs.executeScript({ file: 'libraries/react-dom.min.js' });
-    chrome.tabs.executeScript({ file: 'libraries/jquery.min.js' });
+    // chrome.tabs.executeScript({ file: 'libraries/jquery.min.js' });
+    chrome.tabs.executeScript({ file: 'libraries/pusher.min.js' });
     chrome.tabs.executeScript({ file: 'build_output/content.js' });
     chrome.tabs.executeScript({ file: 'slider.js' });
   });
