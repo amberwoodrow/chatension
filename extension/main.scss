@@ -11,18 +11,19 @@
   z-index: 9999;
   overflow: auto;
   background-image: -webkit-gradient(linear, 0% 100%, 0% 0%, color-stop(0.33, rgb(160, 106, 177)), color-stop(0.67, #645B7E));
+  transition: all linear .2s;
 }
 
 .chatension {
   background: #29243F;
   width: 98%;
-  text-align: center;
   margin: auto;
-  top: 1px;
+  top: 0px;
   right: 1px;
   left: 0px;
-  bottom: 1px;
+  bottom: 2px;
   position: absolute;
+  overflow: auto;
 }
 
 .chatensionLogo {
@@ -37,13 +38,16 @@
   color: rgba(38, 32, 59, 0.8);
   text-align: center;
   border-bottom: 1px solid rgb(17, 17, 17);
-  top: 2px;
+  top: 0;
   position: fixed;
   font-size: 22px;
   line-height: 45px;
   margin-top: 0px;
   width: 19.2%;
-  top: 1px;
+}
+
+.chatensionNameBox {
+  text-align: center;
 }
 
 .chatensionNameInput, .chatensionMessageInput {
@@ -100,10 +104,12 @@
   outline: none;
 }
 
-.chatensionNameForm {
-  text-align: center;
-  margin: auto;
+.chatensionMessageList {
+  margin-top: 50px;
+  background: #29243F;
+  margin-bottom: 60px;
 }
+
 
 .chatensionMessageInput {
   width: 80%;
@@ -120,16 +126,14 @@
   color: #2A2440;
 }
 
-.chatensionMessageList {
-  margin-bottom: 50px;
-  margin-top: 50px;
-}
-
 .chatensionMessageFormDiv {
   position: fixed;
   text-align: center;
   bottom: 2px;
-  width: 19.5%;
+  background: #29243F;
+  width: 19.2%;
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgb(41, 36, 63) 70%);
+  padding-top: 20px;
 }
 
 .chatensionMessageForm {
@@ -137,11 +141,53 @@
 }
 
 .chatensionMessage {
-  margin: 5px 0 5px 5px;
+  margin: 5px 0 5px 10px;
   color: #ffffff; 
 }
 
 .chatensionMessageName span {
   font-weight: bold;
   color: rgb(255, 161, 60);
+}
+
+/* Arrow */
+
+.chatensionArrowBox {
+  border: 1px solid rgb(31, 173, 102);
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  transform: rotate(90deg);
+  width: 40px;
+  border-left: none;
+  top: 100px;
+  width: 45px;
+  background: rgb(31, 173, 162);
+  height: 24px;
+  position: fixed;
+  left: 239px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  box-shadow: rgb(88, 225, 214) 1px 1px 0px inset, rgba(0, 0, 0, 0) 0px 1px 1px;
+  transition: all linear .2s;
+}
+
+.chatensionArrowBox .chatensionArrow {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  height: 0;
+  position: absolute;
+  width: 0;
+  top: 5px;
+  left: 14px;
+  width: 0px;
+  text-shadow: 1px 1px 6px #6F629D, 0px 0px 0px #000, 1px 1px #6F629D;
+}
+
+.chatensionArrowBox .chatensionArrow.dir-one {
+  border-top: 10px solid rgb(45, 39, 69);
+}
+
+.chatensionArrowBox .chatensionArrow.dir-two {
+  border-bottom: 10px solid rgb(45, 39, 69);
 }

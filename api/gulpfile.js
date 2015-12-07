@@ -20,6 +20,9 @@ var paths = {
   ],
   content: [
     '../extension/content.js'
+  ],
+  extension: [
+    '../extension/*.*'
   ]
 };
 
@@ -45,7 +48,7 @@ gulp.task('babel-build', function() {
 // gulp.task('chrome-watch', function () {
 //   var WEB_SOCKET_PORT = 8890;
 //   io = io.listen(WEB_SOCKET_PORT);
-//   gulp.watch('**/*.*', function(file) {
+//   gulp.watch(paths.extension, function(file) {
 //     console.log('chrome-watch change detected in: ', file.relative);
 //     io.emit('file.change', {});
 //   });
@@ -81,5 +84,5 @@ gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass-build']);
 });
 
-gulp.task('default', ['nodemon', 'watch', 'chrome-watch'], function(){});
+gulp.task('default', ['nodemon', 'watch'], function(){});
 

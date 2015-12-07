@@ -4,16 +4,18 @@ var Room = require('../models/room.js');
 var Message = require('../models/message.js');
 
 // GET room, if room doesn't exist it creates one
-router.get('/api/chatension', function(req, res, next) {
+router.get('/api/room', function(req, res, next) {
 
-  Room.findOne({"url": req.body.url}, function(err, data){
+  Room.findOne({"url": req.query.currentUrl})
+  .populate('_messages')
+  .exec(function(err, data){
     if(err){
       res.json({'message': err});
     } else {
       if (data === null) {
-        // createroom
+        // create room
         newRoom = new Room({
-          _url: req.query.currentUrl,
+          url: req.query.currentUrl,
         });
         newRoom.save(function(err, data){
           if(err){
@@ -25,6 +27,7 @@ router.get('/api/chatension', function(req, res, next) {
           }
         });
       } else {
+        // found room, returns messages
         res.json(data);
       }
     }
@@ -33,31 +36,34 @@ router.get('/api/chatension', function(req, res, next) {
   // when username is created find room by it's unique url
 });
 
-// Post to messages
-router.post('/api/chatension', function(req, res, next) {
-  newMessage = new Message({
-    _room: req.body.url,
-    messageContent: req.body.text,
-    name: req.body.name,
-    timeStamp: req.body.id
-  });
-  newMessage.save(function(err,data){
-    if(err){
-      res.json({'message':err});
-    } else{
-      console.log(data);
-      res.json(data);
-    }
-  });
-});
+// aaron.stories.push(story1);
+// aaron.save(callback);
 
-// Story
-// .findOne({ title: 'Once upon a timex.' })
-// .populate('_creator')
-// .exec(function (err, story) {
-//   if (err) return handleError(err);
-//   console.log('The creator is %s', story._creator.name);
-//   // prints "The creator is Aaron"
-// });
+// Post to messages
+router.post('/api/message', function(req, res, next) {
+
+  Room.findOne({"url": req.body.url})
+  .exec(function(err, room) {
+    var newMessage = new Message({
+      _room: room._id,
+      messageContent: req.body.text,
+      name: req.body.name,
+      timeStamp: req.body.id
+    });
+
+    room._messages.push(newMessage);
+
+    room.save(function(err, data){
+      if(err){ res.json({'message':err}); }
+
+      newMessage.save(function(err, data){
+        if(err){ res.json({'message':err}); }
+      });
+    });
+  });
+
+
+
+});
 
 module.exports = router;

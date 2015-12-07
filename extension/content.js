@@ -5,6 +5,7 @@ document.getElementsByTagName("body")[0].innerHTML = theirNewBody;
 
 var elemDiv = document.createElement('div');
 elemDiv.id = 'chatension-sidebar';
+// elemDiv.style["left"] = "10px";
 document.body.insertBefore(elemDiv, document.body.firstChild);
 
 var currentUrl = document.URL;
@@ -18,8 +19,19 @@ var Chatension = React.createClass({
   showChatBoxHandler: function() {
     this.setState({displayChatBox: {display: 'block'}});
   },
+  arrowClickHandler: function() {
+    if (this.state.chatensionArrowClass === "chatensionArrow dir-one") {
+      $('#chatension-sidebar').css('left', '-250px');
+      $('.chatensionArrowBox').css('left', '-10px');
+      this.setState({chatensionArrowClass: "chatensionArrow dir-two"});
+    } else {
+      this.setState({chatensionArrowClass: "chatensionArrow dir-one"});
+      $('#chatension-sidebar').css('left', '0px');
+      $('.chatensionArrowBox').css('left', '239px');
+    }
+  },
   getInitialState: function() {
-    return {displayChatBox: {display: 'none'}, name: ''};
+    return {displayChatBox: {display: 'none'}, name: '', chatensionArrowClass: "chatensionArrow dir-one"};
   },
   render: function() {
     return (
@@ -29,11 +41,28 @@ var Chatension = React.createClass({
           <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
           <ChatBox url={this.props.url} pollInterval={this.props.pollInterval} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
         </div>
+        <div className="chatensionArrowBox" onClick={this.arrowClickHandler}>
+          <div className={this.state.chatensionArrowClass}></div>
+        </div>
       </div>
     );
   }
 });
 
+var sideArrow = React.createClass({
+  // on click show/hide chatension
+  // flip arrow in and out
+  // examples with transition: http://codepen.io/_Billy_Brown/pen/aqsyG  ,  http://jsfiddle.net/M6xJT/
+
+  // getInitialState: function() {
+  //   return {displayNamePage: {display: 'block'}};
+  // },
+  render: function() {
+    <div className="arrow-box">
+      <div className="arrow dir-one"></div>
+    </div>
+  }
+});
 // Username page
 
 var NamePage = React.createClass({ // creates a new react component
@@ -76,7 +105,7 @@ var NameForm = React.createClass({
         <input
           type="text"
           className="chatensionNameInput"
-          placeholder="Your name"
+          placeholder="Enter a name"
           value={this.state.name}
           onChange={this.handleNameChange}
         />
@@ -103,11 +132,12 @@ var ChatBox = React.createClass({
   // GET to create room or retrieve messages for room
   loadMessagesFromServer: function() {
     $.ajax({ 
-      url: this.props.url, // set at bottom
+      url: this.props.url+"/room", // set at bottom
       dataType: 'json',
       cache: false, // no cache because data changes
       data: {currentUrl: currentUrl},
       success: function(data) {
+        console.log("GET data", data._messages)
         this.setState({data: data});
       }.bind(this),
       error: function(xhr, status, err) {
@@ -116,24 +146,23 @@ var ChatBox = React.createClass({
     });
   },
   handleMessageSubmit: function(message) {
-    var messages = this.state.data.messages;
+    var messages = this.state.data._messages;
 
     // add to message object for post request
-    message.id = Date.now();
+    message.timeStamp = Date.now();
     message.name = this.props.name;
     message.url = currentUrl;
 
     var newMessages = messages.concat([message]);
-    this.setState({data: newMessages});
 
     // POST message to server
     $.ajax({
-      url: this.props.url,
+      url: this.props.url+"/message",
       dataType: 'json',
       type: 'POST',
       data: message,
       success: function(data) {
-        this.setState({data: data});
+        // posted yay
       }.bind(this),
       error: function(xhr, status, err) {
         this.setState({data: message});
@@ -160,16 +189,13 @@ var ChatBox = React.createClass({
 
 var MessageList = React.createClass({ // messageNodes print names
   render: function() {
+    console.log(this.props.data._messages)
     if (this.props.data.length === 0) {
-      // tell user they are the first in this room
-      console.log("1")
-    } else if (this.props.data.messages) {
-      console.log("2")
-    } else {
-      console.log(this.props.data)
-      var messageNodes = this.props.data.map(function(message) {
+      // tell there are no messages here
+    } else if (this.props.data._messages) {
+      var messageNodes = this.props.data._messages.map(function(message) {
         return (
-          <Message name={message.name} key={message.id}>
+          <Message name={message.name} key={message._id}>
             {message.messageContent}
           </Message>
         );
@@ -218,6 +244,6 @@ var MessageForm = React.createClass({
 });
 
 React.render(
-  <Chatension url="http://localhost:3000/api/chatension" pollInterval={2000} />,
+  <Chatension url="http://localhost:3000/api" pollInterval={2000} />,
   document.getElementById('chatension-sidebar')
 );
