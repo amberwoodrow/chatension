@@ -1,24 +1,23 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
-#chatension-sidebar {
+#chat {
   font-family: 'Nunito', Helvetica;
-  position: fixed;
-  width: 250px;
-  top: 0px;
-  right: 0px;
-  left: 0px;
-  bottom: 0px;
-  z-index: 9999;
+  width: 90%;
   overflow: auto;
   background-image: -webkit-gradient(linear, 0% 100%, 0% 0%, color-stop(0.33, #a06ab1), color-stop(0.67, #645B7E));
-  transition: all linear .2s; }
+  transition: all linear .2s;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed; }
 
 .chatension {
   background: #29243F;
-  width: 98%;
+  width: 96%;
   margin: auto;
   top: 0px;
-  right: 1px;
-  left: 0px;
+  right: 2px;
+  left: 2px;
   bottom: 2px;
   position: absolute;
   overflow: auto; }
@@ -40,7 +39,7 @@
   font-size: 22px;
   line-height: 45px;
   margin-top: 0px;
-  width: 19.2%; }
+  width: 86.4%; }
 
 .chatensionNameBox {
   text-align: center; }
@@ -115,7 +114,7 @@
   text-align: center;
   bottom: 2px;
   background: #29243F;
-  width: 19.2%;
+  width: 86%;
   background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #29243f 70%);
   padding-top: 20px; }
 
@@ -144,13 +143,13 @@
   background: #1fada2;
   height: 24px;
   position: fixed;
-  left: 239px;
+  left: 86.6%;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   box-shadow: #58e1d6 1px 1px 0px inset, transparent 0px 1px 1px;
   transition: all linear .2s; }
 
-.chatensionArrowBox .chatensionArrow {
+.chatensionArrow {
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   height: 0;

@@ -1,19 +1,3 @@
-var theirBody = document.getElementsByTagName("body")[0].innerHTML;
-var theirNewBody = "<div id='theirBody'>" + theirBody + "</div>";
-document.getElementsByTagName("body")[0].innerHTML = theirNewBody;
-
-var elemDiv = document.createElement('div');
-elemDiv.id = 'chatension-sidebar';
-// elemDiv.style["left"] = "10px";
-document.body.insertBefore(elemDiv, document.body.firstChild);
-
-var formatCurrentUrl = function () {
-  var removeHTTP = document.URL.replace(/http:\/\//, "");
-  return removeHTTP.split('?')[0].replace(/[^\w\s]/gi, "_");
-};
-
-var currentUrl = formatCurrentUrl();
-
 Pusher.log = function (message) {
   if (window.console && window.console.log) {
     window.console.log(message);
@@ -29,7 +13,7 @@ var channel = pusher.subscribe(currentUrl);
 // puts together the chatbox and name page
 
 var Chatension = React.createClass({
-  displayName: "Chatension",
+  displayName: 'Chatension',
 
   nameHandler: function (name) {
     this.setState({ name: name });
@@ -39,13 +23,13 @@ var Chatension = React.createClass({
   },
   arrowClickHandler: function () {
     if (this.state.chatensionArrowClass === "chatensionArrow dir-one") {
-      $('#chatension-sidebar').css('left', '-250px');
-      $('.chatensionArrowBox').css('left', '-10px');
+      $('#chat').css('left', '-86.6%;');
+      $('.chatensionArrowBox').css('left', '-3%');
       this.setState({ chatensionArrowClass: "chatensionArrow dir-two" });
     } else {
       this.setState({ chatensionArrowClass: "chatensionArrow dir-one" });
-      $('#chatension-sidebar').css('left', '0px');
-      $('.chatensionArrowBox').css('left', '239px');
+      $('#chat').css('left', '0px');
+      $('.chatensionArrowBox').css('left', '86.6%');
     }
   },
   getInitialState: function () {
@@ -53,50 +37,43 @@ var Chatension = React.createClass({
   },
   render: function () {
     return React.createElement(
-      "div",
-      { className: "Chatension" },
+      'div',
+      { className: 'chatension' },
       React.createElement(
-        "div",
-        { className: "bg" },
+        'div',
+        { className: 'chatensionArrowBox', onClick: this.arrowClickHandler },
+        React.createElement('div', { className: this.state.chatensionArrowClass })
+      ),
+      React.createElement(
+        'div',
+        { className: 'bg' },
         React.createElement(
-          "h1",
-          { className: "chatensionLogo" },
-          "Chatension"
+          'h1',
+          { className: 'chatensionLogo' },
+          'Chatension'
         ),
         React.createElement(NamePage, { url: this.props.url, showChatBoxHandler: this.showChatBoxHandler, nameHandler: this.nameHandler }),
         React.createElement(ChatBox, { url: this.props.url, displayChatBox: this.state.displayChatBox, name: this.state.name })
-      ),
-      React.createElement(
-        "div",
-        { className: "chatensionArrowBox", onClick: this.arrowClickHandler },
-        React.createElement("div", { className: this.state.chatensionArrowClass })
       )
     );
   }
 });
 
 var sideArrow = React.createClass({
-  displayName: "sideArrow",
+  displayName: 'sideArrow',
 
-  // on click show/hide chatension
-  // flip arrow in and out
-  // examples with transition: http://codepen.io/_Billy_Brown/pen/aqsyG  ,  http://jsfiddle.net/M6xJT/
-
-  // getInitialState: function() {
-  //   return {displayNamePage: {display: 'block'}};
-  // },
   render: function () {
     React.createElement(
-      "div",
-      { className: "arrow-box" },
-      React.createElement("div", { className: "arrow dir-one" })
+      'div',
+      { className: 'arrow-box' },
+      React.createElement('div', { className: 'arrow dir-one' })
     );
   }
 });
 // Username page
 
 var NamePage = React.createClass({
-  displayName: "NamePage",
+  displayName: 'NamePage',
   // creates a new react component
   handleNameSubmit: function (name) {
     this.props.nameHandler(name.name);
@@ -108,15 +85,15 @@ var NamePage = React.createClass({
   },
   render: function () {
     return React.createElement(
-      "div",
-      { style: this.state.displayNamePage, className: "chatensionNameBox" },
+      'div',
+      { style: this.state.displayNamePage, className: 'chatensionNameBox' },
       React.createElement(NameForm, { onNameSubmit: this.handleNameSubmit })
     );
   }
 });
 
 var NameForm = React.createClass({
-  displayName: "NameForm",
+  displayName: 'NameForm',
 
   getInitialState: function () {
     return { name: '' };
@@ -135,16 +112,16 @@ var NameForm = React.createClass({
   },
   render: function () {
     return React.createElement(
-      "form",
-      { className: "chatensionNameForm", onSubmit: this.handleSubmit },
-      React.createElement("input", {
-        type: "text",
-        className: "chatensionNameInput",
-        placeholder: "Enter a name",
+      'form',
+      { className: 'chatensionNameForm', onSubmit: this.handleSubmit },
+      React.createElement('input', {
+        type: 'text',
+        className: 'chatensionNameInput',
+        placeholder: 'Enter a name',
         value: this.state.name,
         onChange: this.handleNameChange
       }),
-      React.createElement("input", { className: "chatensionNameSubmitBtn", type: "submit", value: "Enter room" })
+      React.createElement('input', { className: 'chatensionNameSubmitBtn', type: 'submit', value: 'Enter room' })
     );
   }
 });
@@ -152,20 +129,20 @@ var NameForm = React.createClass({
 // Chat box page
 
 var Message = React.createClass({
-  displayName: "Message",
+  displayName: 'Message',
 
   render: function () {
     return React.createElement(
-      "div",
-      { className: "chatensionMessage" },
+      'div',
+      { className: 'chatensionMessage' },
       React.createElement(
-        "span",
-        { className: "chatensionMessageName" },
+        'span',
+        { className: 'chatensionMessageName' },
         this.props.name,
-        ": "
+        ': '
       ),
       React.createElement(
-        "span",
+        'span',
         null,
         this.props.children
       )
@@ -174,7 +151,7 @@ var Message = React.createClass({
 });
 
 var ChatBox = React.createClass({
-  displayName: "ChatBox",
+  displayName: 'ChatBox',
 
   // GET to create room or retrieve messages for room
   loadMessagesFromServer: function () {
@@ -184,7 +161,6 @@ var ChatBox = React.createClass({
       cache: false, // no cache because data changes
       data: { currentUrl: currentUrl },
       success: (function (data) {
-        console.log("GET data", data._messages);
         this.setState({ data: data });
       }).bind(this),
       error: (function (xhr, status, err) {
@@ -193,7 +169,7 @@ var ChatBox = React.createClass({
     });
   },
   handleMessageSubmit: function (message) {
-
+    console.log(currentUrl);
     // add to message object for post request
     message.timeStamp = Date.now();
     message.name = this.props.name;
@@ -241,8 +217,8 @@ var ChatBox = React.createClass({
   render: function () {
     // messageList print names
     return React.createElement(
-      "div",
-      { style: this.props.displayChatBox, className: "chatensionChatBox" },
+      'div',
+      { style: this.props.displayChatBox, className: 'chatensionChatBox' },
       React.createElement(MessageList, { data: this.state.data }),
       React.createElement(MessageForm, { onMessageSubmit: this.handleMessageSubmit })
     );
@@ -250,7 +226,7 @@ var ChatBox = React.createClass({
 });
 
 var MessageList = React.createClass({
-  displayName: "MessageList",
+  displayName: 'MessageList',
   // messageNodes print names
   render: function () {
     console.log(this.props.data._messages);
@@ -266,15 +242,15 @@ var MessageList = React.createClass({
         });
       }
     return React.createElement(
-      "div",
-      { className: "chatensionMessageList" },
+      'div',
+      { className: 'chatensionMessageList' },
       messageNodes
     );
   }
 });
 
 var MessageForm = React.createClass({
-  displayName: "MessageForm",
+  displayName: 'MessageForm',
 
   getInitialState: function () {
     return { text: '' };
@@ -294,22 +270,22 @@ var MessageForm = React.createClass({
   },
   render: function () {
     return React.createElement(
-      "div",
-      { className: "chatensionMessageFormDiv" },
+      'div',
+      { className: 'chatensionMessageFormDiv' },
       React.createElement(
-        "form",
-        { className: "chatensionMessageForm", onSubmit: this.handleSubmit },
-        React.createElement("input", {
-          type: "text",
-          className: "chatensionMessageInput",
-          placeholder: "Say something...",
+        'form',
+        { className: 'chatensionMessageForm', onSubmit: this.handleSubmit },
+        React.createElement('input', {
+          type: 'text',
+          className: 'chatensionMessageInput',
+          placeholder: 'Say something...',
           value: this.state.text,
           onChange: this.handleTextChange
         }),
-        React.createElement("input", { type: "submit", className: "chatensionMessageSubmitBtn", value: "+" })
+        React.createElement('input', { type: 'submit', className: 'chatensionMessageSubmitBtn', value: '+' })
       )
     );
   }
 });
 
-React.render(React.createElement(Chatension, { url: "http://localhost:3000/api" }), document.getElementById('chatension-sidebar'));
+React.render(React.createElement(Chatension, { url: 'http://localhost:3000/api' }), document.getElementById('chat'));

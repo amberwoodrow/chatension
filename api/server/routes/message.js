@@ -6,6 +6,8 @@ var router = express.Router();
 var Room = require('../models/room.js');
 var Message = require('../models/message.js');
 var Pusher = require('pusher');
+var path = require('path');
+
 // When you create a new Pusher object you are automatically connected to Pusher.
 // can have auth property as well
 var pusher = new Pusher({
@@ -18,8 +20,10 @@ var pusher = new Pusher({
 // Config
 pusher.port = 443;
 
-router.get('/', function() {
-  
+router.get('/', function(req, res, next) {
+  var currentUrl = req.query.currentUrl;
+  currentUrl = currentUrl.toString();
+  res.render("index", {currentUrl: currentUrl});
 });
   // gets zee code to put in iframe
 
@@ -66,12 +70,14 @@ router.post('/api/message', function(req, res, next) {
 
   Room.findOne({"url": req.body.url})
   .exec(function(err, room) {
+    console.log(room)
     var newMessage = new Message({
-      _room: room._id,
+      _room: room,
       messageContent: req.body.text,
       name: req.body.name,
       timeStamp: req.body.timeStamp
     });
+    console.log(room)
 
     room._messages.push(newMessage);
 

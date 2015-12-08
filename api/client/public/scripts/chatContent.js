@@ -1,19 +1,3 @@
-var theirBody = document.getElementsByTagName("body")[0].innerHTML;
-var theirNewBody = "<div id='theirBody'>" + theirBody + "</div>";
-document.getElementsByTagName("body")[0].innerHTML = theirNewBody;
-
-var elemDiv = document.createElement('div');
-elemDiv.id = 'chatension-sidebar';
-// elemDiv.style["left"] = "10px";
-document.body.insertBefore(elemDiv, document.body.firstChild);
-
-var formatCurrentUrl = function() {
-  var removeHTTP = document.URL.replace(/http:\/\//, "");
-  return removeHTTP.split('?')[0].replace(/[^\w\s]/gi, "_");
-};
-
-var currentUrl = formatCurrentUrl();
-
 Pusher.log = function(message) {
   if (window.console && window.console.log) {
     window.console.log(message);
@@ -37,13 +21,13 @@ var Chatension = React.createClass({
   },
   arrowClickHandler: function() {
     if (this.state.chatensionArrowClass === "chatensionArrow dir-one") {
-      $('#chatension-sidebar').css('left', '-250px');
-      $('.chatensionArrowBox').css('left', '-10px');
+      $('#chat').css('left', '-86.6%;');
+      $('.chatensionArrowBox').css('left', '-3%');
       this.setState({chatensionArrowClass: "chatensionArrow dir-two"});
     } else {
       this.setState({chatensionArrowClass: "chatensionArrow dir-one"});
-      $('#chatension-sidebar').css('left', '0px');
-      $('.chatensionArrowBox').css('left', '239px');
+      $('#chat').css('left', '0px');
+      $('.chatensionArrowBox').css('left', '86.6%');
     }
   },
   getInitialState: function() {
@@ -51,14 +35,14 @@ var Chatension = React.createClass({
   },
   render: function() {
     return (
-      <div className="Chatension">
+      <div className="chatension">
+        <div className="chatensionArrowBox" onClick={this.arrowClickHandler}>
+          <div className={this.state.chatensionArrowClass}></div>
+        </div>
         <div className="bg">
           <h1 className="chatensionLogo">Chatension</h1>
           <NamePage url={this.props.url} showChatBoxHandler={this.showChatBoxHandler} nameHandler={this.nameHandler}/>
           <ChatBox url={this.props.url} displayChatBox={this.state.displayChatBox} name={this.state.name}/>
-        </div>
-        <div className="chatensionArrowBox" onClick={this.arrowClickHandler}>
-          <div className={this.state.chatensionArrowClass}></div>
         </div>
       </div>
     );
@@ -66,13 +50,6 @@ var Chatension = React.createClass({
 });
 
 var sideArrow = React.createClass({
-  // on click show/hide chatension
-  // flip arrow in and out
-  // examples with transition: http://codepen.io/_Billy_Brown/pen/aqsyG  ,  http://jsfiddle.net/M6xJT/
-
-  // getInitialState: function() {
-  //   return {displayNamePage: {display: 'block'}};
-  // },
   render: function() {
     <div className="arrow-box">
       <div className="arrow dir-one"></div>
@@ -153,7 +130,6 @@ var ChatBox = React.createClass({
       cache: false, // no cache because data changes
       data: {currentUrl: currentUrl},
       success: function(data) {
-        console.log("GET data", data._messages)
         this.setState({data: data});
       }.bind(this),
       error: function(xhr, status, err) {
@@ -162,7 +138,7 @@ var ChatBox = React.createClass({
     });
   },
   handleMessageSubmit: function(message) {
-
+    console.log(currentUrl)
     // add to message object for post request
     message.timeStamp = Date.now();
     message.name = this.props.name;
@@ -277,5 +253,5 @@ var MessageForm = React.createClass({
 
 React.render(
   <Chatension url="http://localhost:3000/api" />,
-  document.getElementById('chatension-sidebar')
+  document.getElementById('chat')
 );
