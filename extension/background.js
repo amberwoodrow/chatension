@@ -6,12 +6,6 @@ chrome.browserAction.onClicked.addListener(function() {
 
     if (res[0]) { return; } // value of `injected` above: don't inject twice
 
-    chrome.tabs.insertCSS({ file: 'build_output/main.css' });
-    chrome.tabs.executeScript({ file: 'libraries/react.js' });
-    chrome.tabs.executeScript({ file: 'libraries/react-dom.min.js' });
-    // chrome.tabs.executeScript({ file: 'libraries/jquery.min.js' });
-    chrome.tabs.executeScript({ file: 'libraries/pusher.min.js' });
-    chrome.tabs.executeScript({ file: 'build_output/content.js' });
-    chrome.tabs.executeScript({ file: 'slider.js' });
+    chrome.tabs.executeScript({ file: 'content.js' });
   });
 });

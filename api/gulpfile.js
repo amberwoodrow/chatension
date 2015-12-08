@@ -13,16 +13,13 @@ var gutil = require('gulp-util');
 
 var paths = {
   sass: [
-    '../extension/main.scss'
+    './client/public/styles/main.scss'
   ],
   server: [
     './server/bin/www'
   ],
   content: [
-    '../extension/content.js'
-  ],
-  extension: [
-    '../extension/*.*'
+    './client/public/scripts/chatContent.js'
   ]
 };
 
@@ -38,27 +35,18 @@ gulp.task('babel-build', function() {
   // build command line: 
   // babel --presets react ../extension/content.js --watch --out-dir ./build_output
   console.log('Babel built');
-  return gulp.src('../extension/content.js')
+  return gulp.src('./client/public/scripts/chatContent.js')
     .pipe(babel({
       presets: ['react']
     }))
-    .pipe(gulp.dest('../extension/build_output'));
+    .pipe(gulp.dest('./client/public/build_output'));
 });
-
-// gulp.task('chrome-watch', function () {
-//   var WEB_SOCKET_PORT = 8890;
-//   io = io.listen(WEB_SOCKET_PORT);
-//   gulp.watch(paths.extension, function(file) {
-//     console.log('chrome-watch change detected in: ', file.relative);
-//     io.emit('file.change', {});
-//   });
-// });
 
 gulp.task('sass-build', function () {
   console.log("Sass built");
-  gulp.src('../extension/main.scss')
+  gulp.src('./client/public/styles/main.scss')
   .pipe(sass.sync().on('error', sass.logError))
-  .pipe(gulp.dest('../extension/build_output'));
+  .pipe(gulp.dest('./client/public/build_output'));
 });
 
 gulp.task('lint', function() {
