@@ -202,6 +202,8 @@ var ChatBox = React.createClass({
       message.url = currentUrl;
       message.messageContent = data.messageContent;
 
+      console.log(this.state.data); // here
+
       var newMessages = this.state.data._messages.concat([message]);
 
       this.setState({ data: { _messages: newMessages } });
@@ -210,8 +212,6 @@ var ChatBox = React.createClass({
       var chatensionSelector = document.getElementsByClassName("chatension")[0];
       var height = chatensionSelector.scrollHeight;
       chatensionSelector.scrollTop = height;
-
-      // console.log(document.getElementsByClassName("chatensionMessageList"))
     }).bind(this));
   },
   render: function () {
@@ -229,7 +229,6 @@ var MessageList = React.createClass({
   displayName: 'MessageList',
   // messageNodes print names
   render: function () {
-    console.log(this.props.data._messages);
     if (this.props.data.length === 0) {
       // tell there are no messages here
     } else if (this.props.data._messages) {
@@ -264,7 +263,6 @@ var MessageForm = React.createClass({
     if (!text) {
       return;
     }
-    console.log(text);
     this.props.onMessageSubmit({ text: text });
     this.setState({ text: '' });
   },

@@ -2,7 +2,6 @@
 #chat {
   font-family: 'Nunito', Helvetica;
   width: 90%;
-  overflow: auto;
   background-image: -webkit-gradient(linear, 0% 100%, 0% 0%, color-stop(0.33, #a06ab1), color-stop(0.67, #645B7E));
   transition: all linear .2s;
   top: 0;
